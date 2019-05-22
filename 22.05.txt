@@ -1,0 +1,1620 @@
+
+SQLcl: Release 4.2.0.16.153.2014 RC on Wed May 22 03:58:14 2019
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Username? (''?) hr
+Password? (**********?) ******
+Last Successful login time: Wed May 22 2019 03:58:23 -04:00
+
+Connected to:
+Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options
+
+
+SQL> select * from products;
+
+       SID        PID NAME      
+---------- ---------- ----------
+        10        103 Burger    
+        10        104 Fries     
+        20        106 Ball      
+        20        107 Gloves    
+        20        108 Football  
+        20        109 Rugby_Ball
+        30        110 Leather   
+        40        111 Standard  
+        50        112 Wooden    
+        50        113 Beige     
+        60        114 Gas       
+        60        115 Electric  
+        10        101 7UP       
+        10        102 Coke      
+        20        105 Bat       
+
+15 rows selected. 
+
+
+SQL> select * from sales;
+       PID        QTY      PRICE DATE1    
+---------- ---------- ---------- ---------
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       101          1       1.25 21-MAY-19
+       102          1        1.5 21-MAY-19
+       102          1        1.5 21-MAY-19
+       102          1        1.5 21-MAY-19
+       102          1        1.5 21-MAY-19
+       102          1        1.5 21-MAY-19
+       103          1        3.5 21-MAY-19
+       103          1        3.5 21-MAY-19
+       104          1          2 21-MAY-19
+
+21 rows selected. 
+
+
+SQL> Insert into Sales Values(103,1,3.50,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(104,1,2.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(104,1,2.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Select sales.PID,Name,QTY from Sales,Products where Sales.PID=Products.PID; 
+       PID NAME              QTY
+---------- ---------- ----------
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       102 Coke                1
+       102 Coke                1
+       102 Coke                1
+       102 Coke                1
+       102 Coke                1
+       103 Burger              1
+       103 Burger              1
+       104 Fries               1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       103 Burger              1
+       104 Fries               1
+       104 Fries               1
+
+24 rows selected. 
+
+SQL> 
+SQL> Select sales.PID,Name,QTY from Sales,Products where Sales.PID=Products.PID;
+SQL> 
+SQL> 
+SQL> 
+SQL> Select Sales.PID,Name,QTY from Sales,Products where (select count(sales.PID) from Sales,Products where Sales.PID=Products.PID);
+
+Error starting at line : 1 in command -
+Select Sales.PID,Name,QTY from Sales,Products where (select count(sales.PID) from Sales,Products where Sales.PID=Products.PID)
+Error at Command Line : 1 Column : 126
+Error report -
+SQL Error: ORA-00936: missing expression
+00936. 00000 -  "missing expression"
+*Cause:    
+
+
+SQL> Select Sales.PID,Name,QTY from Sales,Products where (select count(sales.PID)as "Most Popular" from Sales,Products where Sales.PID=Products.PID)>10;
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       101 Burger              1
+       102 Burger              1
+       102 Burger              1
+       102 Burger              1
+       102 Burger              1
+       102 Burger              1
+       103 Burger              1
+       103 Burger              1
+       104 Burger              1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       103 Burger              1
+       104 Burger              1
+       104 Burger              1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       101 Fries               1
+       102 Fries               1
+       102 Fries               1
+       102 Fries               1
+       102 Fries               1
+       102 Fries               1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       103 Fries               1
+       103 Fries               1
+       104 Fries               1
+       103 Fries               1
+       104 Fries               1
+       104 Fries               1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       101 Ball                1
+       102 Ball                1
+       102 Ball                1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       102 Ball                1
+       102 Ball                1
+       102 Ball                1
+       103 Ball                1
+       103 Ball                1
+       104 Ball                1
+       103 Ball                1
+       104 Ball                1
+       104 Ball                1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+       101 Gloves              1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Gloves              1
+       102 Gloves              1
+       102 Gloves              1
+       102 Gloves              1
+       102 Gloves              1
+       102 Gloves              1
+       103 Gloves              1
+       103 Gloves              1
+       104 Gloves              1
+       103 Gloves              1
+       104 Gloves              1
+       104 Gloves              1
+       101 Football            1
+       101 Football            1
+       101 Football            1
+       101 Football            1
+       101 Football            1
+       101 Football            1
+       101 Football            1
+       101 Football            1
+       101 Football            1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Football            1
+       101 Football            1
+       101 Football            1
+       101 Football            1
+       102 Football            1
+       102 Football            1
+       102 Football            1
+       102 Football            1
+       102 Football            1
+       103 Football            1
+       103 Football            1
+       104 Football            1
+       103 Football            1
+       104 Football            1
+       104 Football            1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       101 Rugby_Ball          1
+       102 Rugby_Ball          1
+       102 Rugby_Ball          1
+       102 Rugby_Ball          1
+       102 Rugby_Ball          1
+       102 Rugby_Ball          1
+       103 Rugby_Ball          1
+       103 Rugby_Ball          1
+       104 Rugby_Ball          1
+       103 Rugby_Ball          1
+       104 Rugby_Ball          1
+       104 Rugby_Ball          1
+       101 Leather             1
+       101 Leather             1
+       101 Leather             1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Leather             1
+       101 Leather             1
+       101 Leather             1
+       101 Leather             1
+       101 Leather             1
+       101 Leather             1
+       101 Leather             1
+       101 Leather             1
+       101 Leather             1
+       101 Leather             1
+       102 Leather             1
+       102 Leather             1
+       102 Leather             1
+       102 Leather             1
+       102 Leather             1
+       103 Leather             1
+       103 Leather             1
+       104 Leather             1
+       103 Leather             1
+       104 Leather             1
+       104 Leather             1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       101 Standard            1
+       102 Standard            1
+       102 Standard            1
+       102 Standard            1
+       102 Standard            1
+       102 Standard            1
+       103 Standard            1
+       103 Standard            1
+       104 Standard            1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       103 Standard            1
+       104 Standard            1
+       104 Standard            1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       101 Wooden              1
+       102 Wooden              1
+       102 Wooden              1
+       102 Wooden              1
+       102 Wooden              1
+       102 Wooden              1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       103 Wooden              1
+       103 Wooden              1
+       104 Wooden              1
+       103 Wooden              1
+       104 Wooden              1
+       104 Wooden              1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       101 Beige               1
+       102 Beige               1
+       102 Beige               1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       102 Beige               1
+       102 Beige               1
+       102 Beige               1
+       103 Beige               1
+       103 Beige               1
+       104 Beige               1
+       103 Beige               1
+       104 Beige               1
+       104 Beige               1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+       101 Gas                 1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Gas                 1
+       102 Gas                 1
+       102 Gas                 1
+       102 Gas                 1
+       102 Gas                 1
+       102 Gas                 1
+       103 Gas                 1
+       103 Gas                 1
+       104 Gas                 1
+       103 Gas                 1
+       104 Gas                 1
+       104 Gas                 1
+       101 Electric            1
+       101 Electric            1
+       101 Electric            1
+       101 Electric            1
+       101 Electric            1
+       101 Electric            1
+       101 Electric            1
+       101 Electric            1
+       101 Electric            1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Electric            1
+       101 Electric            1
+       101 Electric            1
+       101 Electric            1
+       102 Electric            1
+       102 Electric            1
+       102 Electric            1
+       102 Electric            1
+       102 Electric            1
+       103 Electric            1
+       103 Electric            1
+       104 Electric            1
+       103 Electric            1
+       104 Electric            1
+       104 Electric            1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       101 7UP                 1
+       102 7UP                 1
+       102 7UP                 1
+       102 7UP                 1
+       102 7UP                 1
+       102 7UP                 1
+       103 7UP                 1
+       103 7UP                 1
+       104 7UP                 1
+       103 7UP                 1
+       104 7UP                 1
+       104 7UP                 1
+       101 Coke                1
+       101 Coke                1
+       101 Coke                1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Coke                1
+       101 Coke                1
+       101 Coke                1
+       101 Coke                1
+       101 Coke                1
+       101 Coke                1
+       101 Coke                1
+       101 Coke                1
+       101 Coke                1
+       101 Coke                1
+       102 Coke                1
+       102 Coke                1
+       102 Coke                1
+       102 Coke                1
+       102 Coke                1
+       103 Coke                1
+       103 Coke                1
+       104 Coke                1
+       103 Coke                1
+       104 Coke                1
+       104 Coke                1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       101 Bat                 1
+       102 Bat                 1
+       102 Bat                 1
+       102 Bat                 1
+       102 Bat                 1
+       102 Bat                 1
+       103 Bat                 1
+       103 Bat                 1
+       104 Bat                 1
+
+       PID NAME              QTY
+---------- ---------- ----------
+       103 Bat                 1
+       104 Bat                 1
+       104 Bat                 1
+
+360 rows selected. 
+
+
+SQL> Select Sales.PID,Name,QTY from Sales,Products where (select count(PID) As Popular from Sales Group By PID);
+Error starting at line : 1 in command -
+Select Sales.PID,Name,QTY from Sales,Products where (select count(PID) As Popular from Sales Group By PID)
+Error at Command Line : 1 Column : 106
+Error report -
+SQL Error: ORA-00936: missing expression
+00936. 00000 -  "missing expression"
+*Cause:    
+
+
+SQL> Select Sales.PID,Name,QTY from Sales,Products where (select count(PID) As Popular from Sales Group By PID) = 1;
+Error starting at line : 1 in command -
+Select Sales.PID,Name,QTY from Sales,Products where (select count(PID) As Popular from Sales Group By PID) = 1
+Error report -
+ORA-01427: single-row subquery returns more than one row
+
+
+SQL> Select Sales.PID,Name,QTY from Sales,Products where (select count(PID) As Popular from Sales Group By PID)>1;
+Error starting at line : 1 in command -
+Select Sales.PID,Name,QTY from Sales,Products where (select count(PID) As Popular from Sales Group By PID)>1
+Error report -
+ORA-01427: single-row subquery returns more than one row
+
+
+SQL> Select Count(*), SID from products;
+Error starting at line : 1 in command -
+Select Count(*), SID from products
+Error at Command Line : 1 Column : 18
+Error report -
+SQL Error: ORA-00937: not a single-group group function
+00937. 00000 -  "not a single-group group function"
+*Cause:    
+
+
+SQL> Select * from Products;
+       SID        PID NAME      
+---------- ---------- ----------
+        10        103 Burger    
+        10        104 Fries     
+        20        106 Ball      
+        20        107 Gloves    
+        20        108 Football  
+        20        109 Rugby_Ball
+        30        110 Leather   
+        40        111 Standard  
+        50        112 Wooden    
+        50        113 Beige     
+        60        114 Gas       
+        60        115 Electric  
+        10        101 7UP       
+        10        102 Coke      
+        20        105 Bat       
+
+15 rows selected. 
+
+SQL> Select count(*) from Products;
+
+  COUNT(*)
+----------
+        15
+
+
+SQL> Select count(*) from Products group by SID;
+  COUNT(*)
+----------
+         1
+         5
+         1
+         2
+         4
+         2
+
+6 rows selected. 
+
+
+SQL> Select count(*), SID from Products group by SID;
+  COUNT(*)        SID
+---------- ----------
+         1         30
+         5         20
+         1         40
+         2         50
+         4         10
+         2         60
+
+6 rows selected. 
+
+
+SQL> Select count(*), SID from Products group by SID order SID Asc;
+Error starting at line : 1 in command -
+Select count(*), SID from Products group by SID order SID Asc
+Error at Command Line : 1 Column : 55
+Error report -
+SQL Error: ORA-00924: missing BY keyword
+00924. 00000 -  "missing BY keyword"
+*Cause:    
+
+
+SQL> Select count(*), SID from Products group by SID Order by Desc;
+Error starting at line : 1 in command -
+Select count(*), SID from Products group by SID Order by Desc
+Error at Command Line : 1 Column : 58
+Error report -
+SQL Error: ORA-00936: missing expression
+00936. 00000 -  "missing expression"
+*Cause:    
+
+
+SQL> Select count(*), SID from Products group by SID Order by SID desc;
+  COUNT(*)        SID
+---------- ----------
+         2         60
+         2         50
+         1         40
+         1         30
+         5         20
+         4         10
+
+6 rows selected. 
+
+
+SQL> Select count(*), SID from Products group by SID Order by SID asc;
+  COUNT(*)        SID
+---------- ----------
+         4         10
+         5         20
+         1         30
+         1         40
+         2         50
+         2         60
+
+6 rows selected. 
+
+
+SQL> Select count(*), SID from Products group by SID Order by Count(*) Asc;
+  COUNT(*)        SID
+---------- ----------
+         1         30
+         1         40
+         2         60
+         2         50
+         4         10
+         5         20
+
+6 rows selected. 
+
+
+SQL> Select count(*) as Amount, SID from Products group by SID Order by Count(*) Asc;
+    AMOUNT        SID
+---------- ----------
+         1         30
+         1         40
+         2         60
+         2         50
+         4         10
+         5         20
+
+6 rows selected. 
+
+
+SQL> Select count(*) as Amount, SID from Products group by SID Order by Count(*) Desc;
+    AMOUNT        SID
+---------- ----------
+         5         20
+         4         10
+         2         60
+         2         50
+         1         30
+         1         40
+
+6 rows selected. 
+
+SQL> Select Sales.PID,QTY,Products.PID,Name,subcategory.CID,Description from Sales,Products,SubCategory where Sales.PID=Products.PID and Products.sid=subcategory.sid;
+
+       PID        QTY        PID NAME              CID DESCRIPTION         
+---------- ---------- ---------- ---------- ---------- --------------------
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       101          1        101 7UP                 1 Drinks              
+       102          1        102 Coke                1 Drinks              
+       102          1        102 Coke                1 Drinks              
+       102          1        102 Coke                1 Drinks              
+       102          1        102 Coke                1 Drinks              
+       102          1        102 Coke                1 Drinks              
+       103          1        103 Burger              1 Drinks              
+       103          1        103 Burger              1 Drinks              
+       104          1        104 Fries               1 Drinks              
+
+       PID        QTY        PID NAME              CID DESCRIPTION         
+---------- ---------- ---------- ---------- ---------- --------------------
+       103          1        103 Burger              1 Drinks              
+       104          1        104 Fries               1 Drinks              
+       104          1        104 Fries               1 Drinks              
+
+24 rows selected. 
+
+
+SQL> Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where Sales.PID=Products.PID and Products.sid=subcategory.sid;
+       PID        QTY        SID NAME              CID DESCRIPTION         
+---------- ---------- ---------- ---------- ---------- --------------------
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       103          1         10 Burger              1 Drinks              
+       103          1         10 Burger              1 Drinks              
+       104          1         10 Fries               1 Drinks              
+
+       PID        QTY        SID NAME              CID DESCRIPTION         
+---------- ---------- ---------- ---------- ---------- --------------------
+       103          1         10 Burger              1 Drinks              
+       104          1         10 Fries               1 Drinks              
+       104          1         10 Fries               1 Drinks              
+
+24 rows selected. 
+
+
+SQL> Insert into Sales Values(105,1,6.00,SysDate);
+1 row inserted.
+
+
+SQL> Insert into Sales Values(105,1,6.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(105,1,6.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(105,1,6.00,SysDate);
+
+1 row inserted.
+
+SQL> select * from Products order by SID asc;
+
+       SID        PID NAME      
+---------- ---------- ----------
+        10        103 Burger    
+        10        104 Fries     
+        10        102 Coke      
+        10        101 7UP       
+        20        107 Gloves    
+        20        109 Rugby_Ball
+        20        108 Football  
+        20        105 Bat       
+        20        106 Ball      
+        30        110 Leather   
+        40        111 Standard  
+        50        112 Wooden    
+        50        113 Beige     
+        60        114 Gas       
+        60        115 Electric  
+
+15 rows selected. 
+
+
+SQL> select * from Products order PID asc;
+Error starting at line : 1 in command -
+select * from Products order PID asc
+Error at Command Line : 1 Column : 30
+Error report -
+SQL Error: ORA-00924: missing BY keyword
+00924. 00000 -  "missing BY keyword"
+*Cause:    
+
+
+SQL> select * from Products order by PID asc;
+       SID        PID NAME      
+---------- ---------- ----------
+        10        101 7UP       
+        10        102 Coke      
+        10        103 Burger    
+        10        104 Fries     
+        20        105 Bat       
+        20        106 Ball      
+        20        107 Gloves    
+        20        108 Football  
+        20        109 Rugby_Ball
+        30        110 Leather   
+        40        111 Standard  
+        50        112 Wooden    
+        50        113 Beige     
+        60        114 Gas       
+        60        115 Electric  
+
+15 rows selected. 
+
+
+SQL> Insert into Sales Values(106,1,5.00,SysDate);
+1 row inserted.
+
+
+SQL> Insert into Sales Values(106,1,5.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(106,1,5.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(106,1,5.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(107,1,15.00,SysDate);
+1 row inserted.
+
+
+SQL> Insert into Sales Values(107,1,15.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(107,1,15.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(107,1,15.00,SysDate);
+
+1 row inserted.
+
+
+SQL> Select * from products order by SID asc;
+       SID        PID NAME      
+---------- ---------- ----------
+        10        103 Burger    
+        10        104 Fries     
+        10        102 Coke      
+        10        101 7UP       
+        20        107 Gloves    
+        20        109 Rugby_Ball
+        20        108 Football  
+        20        105 Bat       
+        20        106 Ball      
+        30        110 Leather   
+        40        111 Standard  
+        50        112 Wooden    
+        50        113 Beige     
+        60        114 Gas       
+        60        115 Electric  
+
+15 rows selected. 
+
+
+SQL> Select * from products order by PID asc;
+       SID        PID NAME      
+---------- ---------- ----------
+        10        101 7UP       
+        10        102 Coke      
+        10        103 Burger    
+        10        104 Fries     
+        20        105 Bat       
+        20        106 Ball      
+        20        107 Gloves    
+        20        108 Football  
+        20        109 Rugby_Ball
+        30        110 Leather   
+        40        111 Standard  
+        50        112 Wooden    
+        50        113 Beige     
+        60        114 Gas       
+        60        115 Electric  
+
+15 rows selected. 
+
+
+SQL> Insert into Sales Values(110,1,1000,SysDate);
+Error starting at line : 1 in command -
+Insert into Sales Values(110,1,1000,SysDate)
+Error report -
+ORA-01438: value larger than specified precision allowed for this column
+
+
+SQL> Insert into Sales Values(110,1,300,SysDate);
+1 row inserted.
+
+
+SQL> Insert into Sales Values(111,1,75,SysDate);
+1 row inserted.
+
+
+SQL> Insert into Sales Values(111,1,75,SysDate);
+
+1 row inserted.
+
+
+SQL> Insert into Sales Values(112,1,250,SysDate);
+1 row inserted.
+
+
+SQL> Insert into Sales Values(113,1,250,SysDate);
+1 row inserted.
+
+
+SQL> Insert into Sales Values(114,1,600,SysDate);
+1 row inserted.
+
+SQL> Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where Sales.PID=Products.PID and Products.sid=subcategory.sid;
+
+       PID        QTY        SID NAME              CID DESCRIPTION         
+---------- ---------- ---------- ---------- ---------- --------------------
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       101          1         10 7UP                 1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       102          1         10 Coke                1 Drinks              
+       103          1         10 Burger              1 Drinks              
+       103          1         10 Burger              1 Drinks              
+       104          1         10 Fries               1 Drinks              
+
+       PID        QTY        SID NAME              CID DESCRIPTION         
+---------- ---------- ---------- ---------- ---------- --------------------
+       103          1         10 Burger              1 Drinks              
+       104          1         10 Fries               1 Drinks              
+       104          1         10 Fries               1 Drinks              
+       105          1         20 Bat                 1 Fast_Food           
+       105          1         20 Bat                 1 Fast_Food           
+       105          1         20 Bat                 1 Fast_Food           
+       105          1         20 Bat                 1 Fast_Food           
+       106          1         20 Ball                1 Fast_Food           
+       106          1         20 Ball                1 Fast_Food           
+       106          1         20 Ball                1 Fast_Food           
+       106          1         20 Ball                1 Fast_Food           
+       107          1         20 Gloves              1 Fast_Food           
+       107          1         20 Gloves              1 Fast_Food           
+       107          1         20 Gloves              1 Fast_Food           
+       107          1         20 Gloves              1 Fast_Food           
+       110          1         30 Leather             2 Cricket             
+       111          1         40 Standard            2 Football            
+       111          1         40 Standard            2 Football            
+       112          1         50 Wooden              2 Rugby               
+       113          1         50 Beige               2 Rugby               
+       114          1         60 Gas                 3 Sofa                
+
+42 rows selected. 
+
+
+SQL> Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where Sales.PID=Products.PID and Products.sid=subcategory.sid group by PID;
+Error starting at line : 1 in command -
+Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where Sales.PID=Products.PID and Products.sid=subcategory.sid group by PID
+Error at Command Line : 1 Column : 171
+Error report -
+SQL Error: ORA-00918: column ambiguously defined
+00918. 00000 -  "column ambiguously defined"
+*Cause:    
+
+
+SQL> Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where Sales.PID=Products.PID and Products.sid=subcategory.sid group by Sales.pid;
+Error starting at line : 1 in command -
+Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where Sales.PID=Products.PID and Products.sid=subcategory.sid group by Sales.pid
+Error at Command Line : 1 Column : 18
+Error report -
+SQL Error: ORA-00979: not a GROUP BY expression
+00979. 00000 -  "not a GROUP BY expression"
+*Cause:    
+
+
+
+
+SQL> Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where (select count(sales.PID)from Sales) Sales.PID=Products.PID and Products.sid=subcategory.sid group by Sales.pid;
+Error starting at line : 1 in command -
+Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where (select count(sales.PID)from Sales) Sales.PID=Products.PID and Products.sid=subcategory.sid group by Sales.pid
+Error at Command Line : 1 Column : 142
+Error report -
+SQL Error: ORA-00936: missing expression
+00936. 00000 -  "missing expression"
+*Cause:    
+
+
+SQL> Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where (select count(sales.PID)from Sales) Sales.PID=Products.PID and Products.sid=subcategory.sid;
+Error starting at line : 1 in command -
+Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where (select count(sales.PID)from Sales) Sales.PID=Products.PID and Products.sid=subcategory.sid
+Error at Command Line : 1 Column : 142
+Error report -
+SQL Error: ORA-00936: missing expression
+00936. 00000 -  "missing expression"
+*Cause:    
+
+
+SQL> Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where (select count(sales.PID)from Sales) Sales.PID=Products.PID and Products.sid=subcategory.sid;
+
+Error starting at line : 1 in command -
+Select Sales.PID,QTY,Products.SID,Name,subcategory.CID,Description from Sales,Products,SubCategory where (select count(sales.PID)from Sales) Sales.PID=Products.PID and Products.sid=subcategory.sid
+Error at Command Line : 1 Column : 142
+Error report -
+SQL Error: ORA-00936: missing expression
+00936. 00000 -  "missing expression"
+*Cause:    
+*Action:
+SQL> select name from products where PID = (select pid from sales groupd by pid having count(*) =(select max(Count(*)) from sales group by PID));
+
+Error starting at line : 1 in command -
+select name from products where PID = (select pid from sales groupd by pid having count(*) =(select max(Count(*)) from sales group by PID))
+Error at Command Line : 1 Column : 69
+Error report -
+SQL Error: ORA-00907: missing right parenthesis
+00907. 00000 -  "missing right parenthesis"
+*Cause:    
+
+
+SQL> select name from products where PID = (select pid from sales groupd by pid having count(*) =(select max(Count(*)) from sales group by PID);
+Error starting at line : 1 in command -
+select name from products where PID = (select pid from sales groupd by pid having count(*) =(select max(Count(*)) from sales group by PID)
+Error at Command Line : 1 Column : 40
+Error report -
+SQL Error: ORA-00921: unexpected end of SQL command
+00921. 00000 -  "unexpected end of SQL command"
+*Cause:    
+
+
+
+SQL> select name from products where PID = (select pid from sales groupd by pid having count(*) =(select max(Count(*)) from sales group by PID))
+  2* ;
+Error starting at line : 1 in command -
+select name from products where PID = (select pid from sales groupd by pid having count(*) =(select max(Count(*)) from sales group by PID))
+Error at Command Line : 1 Column : 69
+Error report -
+SQL Error: ORA-00907: missing right parenthesis
+00907. 00000 -  "missing right parenthesis"
+*Cause:    
+
+
+SQL> select name from products where PID = (select pid from sales group by pid having count(*) =(select max(Count(*)) from sales group by PID));
+NAME      
+----------
+7UP       
+
+
+SQL> select PID,name from products where PID = (select pid from sales group by pid having count(*) =(select max(Count(*)) from sales group by PID));
+       PID NAME      
+---------- ----------
+       101 7UP       
+
+SQL> describe user_source;
+Name          Null? Type           
+------------- ----- -------------- 
+NAME                VARCHAR2(128)  
+TYPE                VARCHAR2(12)   
+LINE                NUMBER         
+TEXT                VARCHAR2(4000) 
+ORIGIN_CON_ID       NUMBER         
+SQL> create or replace procedure First_Procedure
+  2  IS
+  3  Begin
+  4  DBMS_output.put_line('Yo');
+  5  DBMS_output.put_line('What is Happening');
+  6  end;
+  7  /
+
+Procedure FIRST_PROCEDURE compiled
+
+
+
+SQL> set serveroutput on;
+SQL> call First_Procedure;
+
+Error starting at line : 1 in command -
+call First_Procedure
+Error report -
+ORA-06576: not a valid function or procedure name
+06576. 00000 -  "not a valid function or procedure name"
+*Cause:    Could not find a function (if an INTO clause was present) or
+           a procedure (if the statement did not have an INTO clause) to
+           call.
+
+
+SQL> call First_Procedure();Yo
+What is Happening
+
+
+Call completed.
+
+
+SQL> Create or Replace Procedure Addition
+  2  IS
+  3  A Number(3);
+  4  B Number(3);
+  5  C Number(3);
+  6  Begin
+  7  A:=15;
+  8  B:=20;
+  9  C:=A+B;
+ 10  
+ 11  dbms_output.put_line('The Result');
+ 12  dbms_output.put_line(C);
+ 13  end;
+ 14* /
+Procedure ADDITION compiled
+
+SQL> Call Procedure Addition;
+
+Error starting at line : 1 in command -
+Call Procedure Addition
+Error report -
+ORA-06576: not a valid function or procedure name
+06576. 00000 -  "not a valid function or procedure name"
+*Cause:    Could not find a function (if an INTO clause was present) or
+           a procedure (if the statement did not have an INTO clause) to
+           call.
+
+
+SQL> Call Procedure Addition();
+Error starting at line : 1 in command -
+Call Procedure Addition()
+Error report -
+ORA-06576: not a valid function or procedure name
+06576. 00000 -  "not a valid function or procedure name"
+*Cause:    Could not find a function (if an INTO clause was present) or
+           a procedure (if the statement did not have an INTO clause) to
+           call.
+
+
+SQL> Call Procedure Addition();
+Error starting at line : 1 in command -
+Call Procedure Addition()
+Error report -
+ORA-06576: not a valid function or procedure name
+06576. 00000 -  "not a valid function or procedure name"
+*Cause:    Could not find a function (if an INTO clause was present) or
+           a procedure (if the statement did not have an INTO clause) to
+           call.
+*Action:   Change the statement to invoke a function or procedure
+SQL> Show errors
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> Create or Replace Procedure Addition
+  2  IS
+  3  A Number(3);
+  4  B Number(3);
+  5  C Number(3);
+  6  Begin
+  7  A:=15;
+  8  B:=20;
+  9  C:=A+B;
+ 10  dbms_output.put_line('The Result');
+ 11  dbms_output.put_line(C);
+ 12  end;
+ 13* /
+Procedure ADDITION compiled
+
+SQL> Call Procedure Addition();
+
+Error starting at line : 1 in command -
+Call Procedure Addition()
+Error report -
+ORA-06576: not a valid function or procedure name
+06576. 00000 -  "not a valid function or procedure name"
+*Cause:    Could not find a function (if an INTO clause was present) or
+           a procedure (if the statement did not have an INTO clause) to
+           call.
+*Action:   Change the statement to invoke a function or procedure
+SQL> Call Addition();
+The Result
+35
+
+
+Call completed.
+
+
+SQL> create or replace procedure Add(A Number,B Number, C Number)
+  2  IS
+  3  Result Number(25);
+  4  Begin
+  5  Result:=A+B+C;
+  6  dbms_output.put_line('Result'||Result);
+  7  end;
+  8* /
+Error starting at line : 1 in command -
+create or replace procedure Add(A Number,B Number, C Number)
+IS
+Result Number(25);
+Begin
+Result:=A+B+C;
+dbms_output.put_line('Result'||Result);
+
+
+
+
+
+
+
+
+SQL> create or replace procedure Add(A Number,B Number, C Number);
+  2  IS
+  3  Result Number(25);
+  4  Begin
+  5  Result:=A+B+C;
+  6  dbms_output.put_line('Result'||Result);
+  7  end;
+  8* /
+Error starting at line : 1 in command -
+create or replace procedure Add(A Number,B Number, C Number);
+IS
+Result Number(25);
+Begin
+Result:=A+B+C;
+dbms_output.put_line('Result'||Result);
+
+
+
+
+
+
+
+
+SQL> create or replace procedure Add2(A Number,B Number, C Number)
+  2  IS
+  3  Result Number(25);
+  4  Begin
+  5  Result:=A+B+C;
+  6  dbms_output.put_line('Result'||Result);
+  7  end;
+  8* /
+Procedure ADD2 compiled
+
+SQL> Call ADD2();
+
+Error starting at line : 1 in command -
+Call ADD2()
+Error report -
+ORA-06553: PLS-306: wrong number or types of arguments in call to 'ADD2'
+06553. 00000 -  "PLS-%s: %s"
+*Cause:    
+
+
+SQL> Call ADD2(10,20,30);Result60
+
+
+Call completed.
+
+SQL> Select * from School;
+
+     REGNO NAME                                MARKS
+---------- ------------------------------ ----------
+        10 Dale                                  100
+        11 Carl                                   98
+        12 Harley                                  1
+        26 Jason                                 125
+        30 Sachin                                149
+
+SQL> Create or Replace Procedure Record(R Number,N Char,M Number)
+  2  IS
+  3  Begin
+  4  Insert Into School Values(R,N,M);
+  5  Select * from School;
+  6  end;
+  7  /
+
+Procedure RECORD compiled
+
+Errors: check compiler log
+SQL> Show Errors
+
+
+
+
+
+
+
+
+SQL> Create or Replace Procedure Record(R Number,N Char,M Number)
+  2  IS
+  3  Begin
+  4  Insert Into School Values(R,N,M);
+  5  end;
+  6* /
+Procedure RECORD compiled
+
+SQL> Call Record(31,'Simon',76);
+
+Call completed.
+
+
+SQL> Call Record(32,'Miles',88),(33,'John',12);
+Error starting at line : 1 in command -
+Call Record(32,'Miles',88),(33,'John',12)
+Error report -
+ORA-00933: SQL command not properly ended
+00933. 00000 -  "SQL command not properly ended"
+*Cause:    
+
+
+SQL> Select * from Bank2;
+ACCNO NAME                 ADDRESS                                 
+----- -------------------- ----------------------------------------
+SM001 Dale                 Manchester                              
+SM002 Peter                Manchester                              
+SS003 Simon                Swindon                                 
+CS001 Dale                 Swindon                                 
+CS002 Pete                 Swindon                                 
+
+SQL> Create or replace procedure AccountAdd(Name Char,PostCode Char, AcType Char,City Char)
+  2  IS
+  3  Begin
+  4  Insert into Bank2 Values((Select Upper(Substr(AcType,1,1))||Upper(SubStr(City1,1))||LPAD(nvl(max(substr(AccNo,3,3))+1,1),3,'0')) from Bank2 where Substr(AccNo,1,1) = upper(SubStr(AcType,1,1)),Name,PostCode);
+  5  end;
+  6  /
+
+Procedure ACCOUNTADD compiled
+
+Errors: check compiler log
+SQL> ShowErrors
+
+Error starting at line : 1 in command -
+ShowErrors
+Error report -
+Unknown Command
+
+SQL> Show Errors
+
+Errors for PROCEDURE HR.ACCOUNTADD:
+
+
+
+
+
+
+SQL> Create or replace procedure AccountAdd(Name Char,PostCode Char, AcType Char,City Char)
+  2  IS
+  3  Begin                                                                                                                          ) from Bank2 where Substr(AccNo,1,1) = upper(SubStr(AcType,1,1)),Name,PostCode);
+;
+  6  /
+
+SQL> 
+
+
+SQL> 
+
+
+SQL> 
+
+
+SQL> 
+
+
+SQL> 
+
+
+
+
+
+
+SQL> Create or replace procedure AccountAdd(Name Char,PostCode Char, AcType Char,City Char)
+  2  IS
+  3  Begin
+  4  Insert into Bank2 Values((Select Upper(Substr(AcType,1,1))||Upper(SubStr(City1,1))||LPAD(nvl(max(substr(AccNo,3,3))+1,1),3,'0'))) 
+  5  from Bank2 where Substr(AccNo,1,1) = upper(SubStr(AcType,1,1)),Name,PostCode);
+  6  end;
+  7* /
+Procedure ACCOUNTADD compiled
+
+Errors: check compiler log
+SQL> Show Errors
+
+Errors for PROCEDURE HR.ACCOUNTADD:
+
+
+
+
+
+
+SQL> Create or replace procedure AccountAdd(Name Char,Address Char, AcType Char,City Char)
+  2  IS
+  3  Begin
+  4  Insert into Bank2 Values((Select Upper(Substr(AcType,1,1))||Upper(SubStr(City1,1))||LPAD(nvl(max(substr(AccNo,3,3))+1,1),3,'0'))) 
+
+
+
+
+
+
+
+SQL> Create or replace procedure AccountAdd(Name Char,Address Char, AcType Char,City Char)
+  2  IS
+  3  Begin
+  4  Insert into Bank2 Values((Select Upper(Substr(AcType,1,1))||Upper(SubStr(City1,1))||LPAD(nvl(max(substr(AccNo,3,3))+1,1),3,'0')) 
+  5  from Bank2 where Substr(AccNo,1,1) = upper(SubStr(AcType,1,1)),Name,Address));
+  6  end;
+  7* /
+Procedure ACCOUNTADD compiled
+
+Errors: check compiler log
+SQL> Show Errors
+
+Errors for PROCEDURE HR.ACCOUNTADD:
+
+
+
+
+
+
+SQL> Create or replace procedure AccountAdd(Name Char,Address Char, AcType Char,City Char)
+  2  IS
+  3  Begin
+  4  Insert into Bank2 Values((Select Upper(Substr(AcType,1,1))||Upper(SubStr(City1,1))||LPAD(nvl(max(substr(AccNo,3,3))+1,1),3,'0'))) 
+  5  from Bank2 where Substr(AccNo,1,1) = upper(SubStr(AcType,1,1)),Name,Address));
+  6  end;
+  7* /
+Procedure ACCOUNTADD compiled
+
+Errors: check compiler log
+SQL> Show Errors
+
+Errors for PROCEDURE HR.ACCOUNTADD:
+
+
+
+
+
+
+SQL> Create or replace procedure AccountAdd(Name Char,Address Char, AcType Char,City Char)
+  2  IS
+  3  Begin
+  4  Insert into Bank2 Values((Select Upper(SubStr(AcType,1,1)||
+  5  Upper (SubStr(City1,1))||
+  6  LPAD(nvl(max(substr(AccNo,3,3))+1,1),3,'0'))
+  7  From Bank2 where SubStr(AccNo,1,1) = Upper(SubStr(AcType,1,1)),
+  8  Name, PostCode);
+  9  End;
+ 10* /
+Procedure ACCOUNTADD compiled
+
+Errors: check compiler log
+
+
+
+
+
+
+
+
+
+SQL> Create or replace procedure AccountAdd(Name Char,Address Char, AcType Char,City Char)
+  2  IS
+  3  Begin
+  4  Insert into Bank2 Values((Select Upper(SubStr(AcType,1,1)||
+  5  Upper (SubStr(City1,1))||
+  6  LPAD(nvl(max(substr(AccNo,3,3))+1,1),3,'0'))
+  7  From Bank2 where SubStr(AccNo,1,1) = Upper(SubStr(AcType,1,1))),
+  8  Name, PostCode);
+  9  End;
+ 10* /
+Procedure ACCOUNTADD compiled
+
+Errors: check compiler log
+
+
+
+
+
+
+
+
+
+SQL> Create or replace procedure AccountAdd(Name Char,Address Char, AcType Char,City Char)
+  2  IS
+  3  Begin
+  4  Insert into Bank2 Values((Select Upper(SubStr(AcType,1,1)||
+  5  Upper (SubStr(City1,1))||
+  6  LPAD(nvl(max(substr(AccNo,3,3))+1,1),3,'0'))
+  7  From Bank2 where SubStr(AccNo,1,1) = Upper(SubStr(AcType,1,1))),
+  8  Name, Address);
+  9  End;
+ 10* /
+Procedure ACCOUNTADD compiled
+
+Errors: check compiler log
+
+
+
+
+
+
+
+
+
+SQL> Create or replace procedure AccountAdd(Name Char,Address Char, AcType Char,City Char)
+  2  IS
+  3  Begin
+  4  Insert into Bank2 Values((Select Upper(SubStr(AcType,1,1)||
+  5  Upper (SubStr(City,1,1))||
+  6  LPAD(nvl(max(substr(AccNo,3,3))+1,1),3,'0'))
+  7  From Bank2 where SubStr(AccNo,1,1) = Upper(SubStr(AcType,1,1))),
+  8  Name, Address);
+  9  End;
+ 10* /
+Procedure ACCOUNTADD compiled
+
+SQL> Call AccountAdd(John,Swindon,Current,Swindon);
+
+Error starting at line : 1 in command -
+Call AccountAdd(John,Swindon,Current,Swindon)
+Error report -
+ORA-00936: missing expression
+00936. 00000 -  "missing expression"
+*Cause:    
+
+
+SQL> Call AccountAdd('John','Swindon','Current','Swindon');
+Call completed.
+
+SQL> Select * from bank2
+  2  ;
+
+ACCNO NAME                 ADDRESS                                 
+----- -------------------- ----------------------------------------
+SM001 Dale                 Manchester                              
+SM002 Peter                Manchester                              
+SS003 Simon                Swindon                                 
+CS001 Dale                 Swindon                                 
+CS002 Pete                 Swindon                                 
+CS003 John                 Swindon                                 
+
+6 rows selected. 
+
+SQL> 
+
+
