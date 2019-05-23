@@ -1,0 +1,81 @@
+SQL> Create or Replace Procedure CatEntry(Cat Char, Sub Char)
+  2  Is
+  3  NewCID Number(2);
+  4  NewSID Number(3);
+  5  Begin
+  6  Select NVL(Max(CID),0) Into NewCID from Category where Description = Cat;
+  7  If NewCID=0 Then
+  8  Select NVL(Max(CID),0)+1 Into NewCID From category;
+  9  Insert into Category values(NewCID,Cat);
+ 10  End If;
+ 11  Select NVL(Max(SID),0)+1 into NewSID from SubCategory;
+ 12  Insert Into SubCategory values(NewCID,NewSID,Sub);
+ 13  end;
+ 14  /
+
+Procedure CATENTRY compiled
+
+SQL> Set ServerOutput On;
+SQL> Call CatEntry('Food','Drinks');
+
+Call completed.
+
+SQL> Select * from Category;
+
+       CID DESCRIPTIO
+---------- ----------
+         1 Food      
+
+
+SQL> Select * from SubCategory;
+       CID        SID DESCRIPTION         
+---------- ---------- --------------------
+         1          1 Drinks              
+
+SQL> Call CatEntry('Food','Fast_Food');
+
+Call completed.
+
+
+SQL> Select * from Category;
+
+       CID DESCRIPTIO
+---------- ----------
+         1 Food      
+
+
+SQL> Select * from SubCategory;
+
+       CID        SID DESCRIPTION         
+---------- ---------- --------------------
+         1          1 Drinks              
+         1          2 Fast_Food           
+
+SQL> Call CatEntry('Sports','Cricket');
+
+Call completed.
+
+
+SQL> Select * from Category;
+
+       CID DESCRIPTIO
+---------- ----------
+         2 Sports    
+         1 Food      
+
+
+SQL> Select * from SubCategory;
+
+       CID        SID DESCRIPTION         
+---------- ---------- --------------------
+         1          1 Drinks              
+         1          2 Fast_Food           
+         2          3 Cricket             
+
+
+SQL> Select * from Category order by CID Asc;
+       CID DESCRIPTIO
+---------- ----------
+         1 Food      
+         2 Sports    
+
