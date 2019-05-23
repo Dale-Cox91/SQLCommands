@@ -1,0 +1,26 @@
+SQL> Create or Replace Function DName(D Number)
+  2  Return Char
+  3  Is
+  4  DN Departments.Department_Name%Type;
+  5  Begin
+  6  Select Department_Name into DN from Departments where Department_id = D;
+  7  Return DN;
+  8  End;
+  9* /
+
+
+SQL> Create or Replace Function Tax2(S Number)
+  2  Return Number
+  3  IS
+  4  Result Number(7,2);
+  5  Begin
+  6  If S<=2000 then Result:=0;
+  7  End If;
+  8  If S >2000 and S<=10000 then Result:=S*15/100;
+  9  End If;
+ 10  IF S>10000 then Result:=S*21/100;
+ 11  End if;
+ 12  Return Result;
+ 13  end;
+ 14* /
+
